@@ -1,0 +1,9 @@
+{
+    "Releases": [
+        {
+            "Id": "visible_passengers",
+            "Version": "0.0.1",
+            "DownloadUrl": "https://github.com/t0stiman/rr_visible_passengers/releases/download/v0.0.1/visible_passengers.zip"
+        }
+    ]
+}

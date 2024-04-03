@@ -1,0 +1,8 @@
+.idea
+bin
+obj
+build/
+packages
+Directory.Build.targets
+Folder.DotSettings.user
+Directory.Build - Copy.targets

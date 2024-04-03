@@ -1,0 +1,10 @@
+{
+	"Id": "visible_passengers",
+	"Version": "0.0.1",
+	"DisplayName": "visible_passengers",
+	"Author": "Tostiman",
+	"EntryMethod": "visible_passengers.Main.Load",
+	"AssemblyName": "visible_passengers.dll",
+	"HomePage": "https://github.com/t0stiman/rr_visible_passengers",
+	"Repository": "https://raw.githubusercontent.com/t0stiman/rr_visible_passengers/master/repository.json"
+}
