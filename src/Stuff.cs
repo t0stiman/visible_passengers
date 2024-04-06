@@ -8,7 +8,7 @@ public static class Stuff
 	public const bool SKIP_ORIGINAL = false;
 
 	public const string PASSENGER_LOAD_ID = "passengers";
-	public const string NPC_PREFIX = "[NPC] ";
+	public const string NPC_POSTFIX = " [NPC]";
 	
 	private static Random random = new();
 	

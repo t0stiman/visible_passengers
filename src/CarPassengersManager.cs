@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Avatar;
@@ -6,7 +6,6 @@ using Game;
 using Game.State;
 using Helpers;
 using Model.OpsNew;
-using RandomNameGeneratorLibrary;
 using RollingStock;
 using UnityEngine;
 using visible_passengers.Extensions;
@@ -16,12 +15,15 @@ namespace visible_passengers;
 public class CarPassengersManager: MonoBehaviour
 {
 	private List<Seat> seats = new();
-	private List<Passenger> passengerAvatars = new();
+	private List<NPC_Avatar> passengerAvatars = new();
 	public Model.Car theCar;
 	private static readonly System.Random random = new();
+	private DateTime previousUpdateTime;
+	private int previousPassengerAmount = 0;
 
 	private void Start()
 	{
+		previousUpdateTime = DateTime.Now;
 		seats = transform.GetComponentsInChildren<Seat>().ToList();
 		
 		var passengerCount = theCar.GetPassengerMarker()?.TotalPassengers ?? 0;
@@ -38,14 +40,36 @@ public class CarPassengersManager: MonoBehaviour
 		}
 	}
 
-	public void UpdatePassengers(int passengersDelta)
+	private void Update()
 	{
-		Main.Debug($"{nameof(UpdatePassengers)}: passengersDelta {passengersDelta}");
+		if ((DateTime.Now - previousUpdateTime).TotalSeconds < 1f)
+		{
+			return;
+		}
 		
-		var passengersToShow = passengerAvatars.Count + passengersDelta;
+		previousUpdateTime = DateTime.Now;
+		
+		var passengerMarker = theCar.GetPassengerMarker();
+		if (passengerMarker.HasValue)
+		{
+			var passengerCount = passengerMarker.Value.TotalPassengers;
+			if (previousPassengerAmount == passengerCount)
+			{
+				return;
+			}
+			
+			UpdatePassengers(passengerCount);
+		}
+	}
+
+	public void UpdatePassengers(int passengerCount)
+	{
+		previousPassengerAmount = passengerCount;
+		
+		var passengersToShow = passengerCount;
 		if (passengersToShow > seats.Count)
 		{
-			Main.Debug($"passengersToShow{passengersToShow} > seats.Count{seats.Count}");
+			// Main.Debug($"passengersToShow{passengersToShow} > seats.Count{seats.Count}");
 			passengersToShow = seats.Count;
 		}
 		if (passengersToShow < 0)
@@ -54,22 +78,24 @@ public class CarPassengersManager: MonoBehaviour
 			Main.Error($"{nameof(UpdatePassengers)}: somehow got below zero passengers");
 		}
 		
-		Main.Debug($"{passengerAvatars.Count} -> {passengersToShow} ");
-		
 		if (passengerAvatars.Count == passengersToShow)
 		{
 			return;
 		}
+		
+		Main.Debug($"{nameof(UpdatePassengers)}: {passengerAvatars.Count} -> {passengersToShow} ");
 
 		// too many
 		if (passengerAvatars.Count > passengersToShow)
 		{
-			for (var i = passengerAvatars.Count; i <= passengersToShow; i++)
+			for (var i = passengerAvatars.Count-1; i >= passengersToShow; i--)
 			{
-				Destroy(passengerAvatars[i]);
+				Main.Debug($"Destroy passenger {i}");
+				Destroy(passengerAvatars[i].gameObject);
 			}
 
-			passengerAvatars.RemoveRange(passengersToShow, passengerAvatars.Count-1);
+			passengerAvatars.RemoveRange(passengersToShow, passengerAvatars.Count-passengersToShow);
+			Main.Debug($"passengerAvatars.Count {passengerAvatars.Count}");
 			return;
 		}
 		
@@ -79,9 +105,6 @@ public class CarPassengersManager: MonoBehaviour
 			.Where(seat => !seat.NPCOnSeat())
 			.ToList();
 		unoccupiedSeats.Shuffle();
-		
-		// Main.Debug($"{nameof(UpdatePassengers)}: passengersToAdd {passengersToAdd}");
-		// Main.Debug($"{nameof(UpdatePassengers)}: unoccupiedSeats {unoccupiedSeats.Count}");
 
 		for (var i = 0; i < passengersToAdd; i++)
 		{
@@ -97,8 +120,6 @@ public class CarPassengersManager: MonoBehaviour
 
 	private void AddPassenger(Seat aSeat)
 	{
-		Main.Debug(nameof(AddPassenger));
-
 		int playerIdInt;
 		while (true)
 		{
@@ -119,7 +140,6 @@ public class CarPassengersManager: MonoBehaviour
 		
 		var newAvatar = AvatarManager.Instance.AddNPC(playerId, playerGender);
 		newAvatar.Sit(aSeat);
-		newAvatar.Car = theCar;
 		passengerAvatars.Add(newAvatar);
 	}
 

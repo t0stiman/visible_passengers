@@ -9,13 +9,13 @@ public static class AvatarManager_Extensions
 {
 	private static readonly PersonNameGenerator personGenerator = new();
 	
-	public static Passenger AddNPC(this AvatarManager deez, PlayerId playerId, Gender gender)
+	public static NPC_Avatar AddNPC(this AvatarManager deez, PlayerId playerId, Gender gender)
 	{
-		var playerName = Stuff.NPC_PREFIX+
-		                 (gender == Gender.Male ? personGenerator.GenerateRandomMaleFirstAndLastName() : personGenerator.GenerateRandomFemaleFirstAndLastName());
+		var playerName = (gender == Gender.Male ? personGenerator.GenerateRandomMaleFirstAndLastName() : personGenerator.GenerateRandomFemaleFirstAndLastName())
+			+ Stuff.NPC_POSTFIX;
 		
 		var avatarPrefab = deez.AddAvatar(AvatarDescriptor_Extensions.Random(gender), false, playerId, playerName);
-		var remoteAvatar = avatarPrefab.gameObject.AddComponent<Passenger>();
+		var remoteAvatar = avatarPrefab.gameObject.AddComponent<NPC_Avatar>();
 		remoteAvatar.avatar = avatarPrefab;
 		remoteAvatar.name = $"{playerId} ${playerName}"; //123 $John Smith
 		return remoteAvatar;

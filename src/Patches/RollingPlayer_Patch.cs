@@ -1,5 +1,6 @@
 ﻿using Audio;
 using HarmonyLib;
+using Model.Definition;
 
 namespace visible_passengers.Patches;
 
@@ -12,29 +13,10 @@ public class RollingPlayer_OnEnable_Patch
 {
 	private static void Postfix(RollingPlayer __instance)
 	{
-		Main.Debug(" halllooooo");
-		
 		var car = __instance._car;
-		var carCanCarryPassengers = false;
 
-		foreach (var slot in car.Definition.LoadSlots)
+		if (car.Archetype != CarArchetype.Coach)
 		{
-			if (slot is null)
-			{
-				continue;
-			}
-			Main.Debug($"{car.name} load: {slot.RequiredLoadIdentifier}");
-			
-			if (slot.RequiredLoadIdentifier == Stuff.PASSENGER_LOAD_ID)
-			{
-				carCanCarryPassengers = true;
-				break;
-			}
-		}
-
-		if (!carCanCarryPassengers)
-		{
-			Main.Debug($"{car.name} can't carry passengers");
 			return;
 		}
 
