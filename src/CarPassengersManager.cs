@@ -5,7 +5,7 @@ using Avatar;
 using Game;
 using Game.State;
 using Helpers;
-using Model.OpsNew;
+using Model.Ops;
 using RollingStock;
 using UnityEngine;
 using visible_passengers.Extensions;
@@ -35,7 +35,6 @@ public class CarPassengersManager: MonoBehaviour
 		Main.Debug(nameof(OnDestroy)+" "+passengerAvatars.Count);
 		foreach (var avatar in passengerAvatars)
 		{
-			Destroy(avatar.avatar);
 			Destroy(avatar);
 		}
 	}
@@ -69,7 +68,7 @@ public class CarPassengersManager: MonoBehaviour
 		var passengersToShow = passengerCount;
 		if (passengersToShow > seats.Count)
 		{
-			// Main.Debug($"passengersToShow{passengersToShow} > seats.Count{seats.Count}");
+			Main.Debug($"passengersToShow{passengersToShow} > seats.Count{seats.Count}");
 			passengersToShow = seats.Count;
 		}
 		if (passengersToShow < 0)

@@ -5,7 +5,7 @@ using Model.Definition;
 namespace visible_passengers.Patches;
 
 /// <summary>
-/// we use RollingPlayer because all rolling stock have this script
+/// we patch RollingPlayer because all rolling stock have this script
 /// </summary>
 [HarmonyPatch(typeof(RollingPlayer))]
 [HarmonyPatch(nameof(RollingPlayer.OnEnable))]
@@ -20,7 +20,6 @@ public class RollingPlayer_OnEnable_Patch
 			return;
 		}
 
-		//todo this probably doesn't work
 		if (car.gameObject.GetComponent<CarPassengersManager>() is not null)
 		{
 			Main.Debug($"{car.name} already had {nameof(CarPassengersManager)}");
@@ -35,7 +34,6 @@ public class RollingPlayer_OnEnable_Patch
 		}
 		
 		Main.Debug($"successfully added {nameof(CarPassengersManager)} to {car.name}");
-
 		pMan.theCar = car;
 	}
 }

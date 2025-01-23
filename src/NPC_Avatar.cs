@@ -19,6 +19,11 @@ public class NPC_Avatar: RemoteAvatar
 		//nothing
 	}
 
+	private void OnDestroy()
+	{
+		Destroy(avatar);
+	}
+
 	private void Update()
 	{
 		// if (avatar.Animator._pose == AvatarPose.Sit)
