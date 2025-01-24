@@ -1,10 +1,9 @@
-﻿# visible_passengers 
+﻿# Visible passengers 
 
-todo
+![screenshot](screenshot.png)
 
-## Features
-
-todo
+This Railroader mod adds visible passengers to the passenger cars in the game.   
+The amount of visible passengers matches the amount of passengers that have boarded the train. However, the passenger coaches in the game sadly only have a few functional seats so the coaches will not fill up completely.
 
 ## How to install
 
